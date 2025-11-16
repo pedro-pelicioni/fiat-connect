@@ -20,10 +20,10 @@ const Login = () => {
     // Simulate login
     setTimeout(() => {
       if (email && password) {
-        toast.success("Login realizado com sucesso!");
+        toast.success("Login successful!");
         navigate("/dashboard");
       } else {
-        toast.error("Por favor, preencha todos os campos");
+        toast.error("Please fill in all fields");
       }
       setIsLoading(false);
     }, 1000);
@@ -37,14 +37,14 @@ const Login = () => {
             <Wallet className="w-8 h-8 text-primary-foreground" />
           </div>
           <h1 className="text-3xl font-bold text-foreground mb-2">NativeFi</h1>
-          <p className="text-muted-foreground">Gateway de Pagamento Cripto</p>
+          <p className="text-muted-foreground">Crypto Payment Gateway</p>
         </div>
 
         <Card className="shadow-elevated border-border">
           <CardHeader>
-            <CardTitle>Bem-vindo de volta</CardTitle>
+            <CardTitle>Welcome back</CardTitle>
             <CardDescription>
-              Entre com suas credenciais para acessar sua conta
+              Sign in with your credentials to access your account
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -54,7 +54,7 @@ const Login = () => {
                 <Input
                   id="email"
                   type="email"
-                  placeholder="seu@email.com"
+                  placeholder="your@email.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="bg-background"
@@ -63,7 +63,7 @@ const Login = () => {
               </div>
               
               <div className="space-y-2">
-                <Label htmlFor="password">Senha</Label>
+                <Label htmlFor="password">Password</Label>
                 <Input
                   id="password"
                   type="password"
@@ -80,12 +80,12 @@ const Login = () => {
                 className="w-full bg-gradient-primary hover:opacity-90 transition-opacity"
                 disabled={isLoading}
               >
-                {isLoading ? "Entrando..." : "Entrar"}
+                {isLoading ? "Signing in..." : "Sign In"}
               </Button>
 
               <div className="flex items-center justify-center gap-2 text-sm text-muted-foreground mt-6">
                 <Shield className="w-4 h-4" />
-                <span>Suas transações são seguras e criptografadas</span>
+                <span>Your transactions are secure and encrypted</span>
               </div>
             </form>
           </CardContent>
