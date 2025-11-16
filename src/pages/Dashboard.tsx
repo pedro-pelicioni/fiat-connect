@@ -3,6 +3,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
 import { 
   ArrowUpRight, 
   ArrowDownLeft, 
@@ -12,7 +14,9 @@ import {
   TrendingUp,
   LogOut,
   Settings,
-  PieChart as PieChartIcon
+  PieChart as PieChartIcon,
+  Plus,
+  Trash2
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
@@ -114,7 +118,10 @@ const Dashboard = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [showSplitConfig, setShowSplitConfig] = useState(false);
-  const [splitRecipients] = useState<SplitRecipient[]>(mockSplitRecipients);
+  const [splitRecipients, setSplitRecipients] = useState<SplitRecipient[]>(mockSplitRecipients);
+  const [isEditingRecipient, setIsEditingRecipient] = useState(false);
+  const [editingRecipient, setEditingRecipient] = useState<SplitRecipient | null>(null);
+  const [newRecipient, setNewRecipient] = useState({ name: "", percentage: 0, address: "" });
 
   const totalBalance = 1245.50;
   const totalToday = 225.50;
@@ -122,6 +129,34 @@ const Dashboard = () => {
   const handleLogout = () => {
     navigate("/");
   };
+
+  const handleAddRecipient = () => {
+    if (!newRecipient.name || !newRecipient.address || newRecipient.percentage <= 0) return;
+    
+    const recipient: SplitRecipient = {
+      id: Date.now().toString(),
+      ...newRecipient
+    };
+    
+    setSplitRecipients([...splitRecipients, recipient]);
+    setNewRecipient({ name: "", percentage: 0, address: "" });
+    setIsEditingRecipient(false);
+  };
+
+  const handleRemoveRecipient = (id: string) => {
+    setSplitRecipients(splitRecipients.filter(r => r.id !== id));
+  };
+
+  const handleUpdateRecipient = () => {
+    if (!editingRecipient) return;
+    
+    setSplitRecipients(splitRecipients.map(r => 
+      r.id === editingRecipient.id ? editingRecipient : r
+    ));
+    setEditingRecipient(null);
+  };
+
+  const totalPercentage = splitRecipients.reduce((sum, r) => sum + r.percentage, 0);
 
   const getStatusBadge = (status: Transaction["status"]) => {
     switch (status) {
@@ -217,20 +252,154 @@ const Dashboard = () => {
               <CardDescription className="text-primary-foreground/80">Payment Split</CardDescription>
             </CardHeader>
             <CardContent>
-              <Button 
-                variant="secondary" 
-                className="w-full"
-                onClick={() => setShowSplitConfig(!showSplitConfig)}
-              >
-                <Settings className="w-4 h-4 mr-2" />
-                {showSplitConfig ? "Hide Config" : "Configure Split"}
-              </Button>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="secondary" className="w-full">
+                    <Settings className="w-4 h-4 mr-2" />
+                    Configure Split
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+                  <DialogHeader>
+                    <DialogTitle>Configure Payment Split</DialogTitle>
+                    <DialogDescription>
+                      Set up how incoming payments should be split across different investments
+                    </DialogDescription>
+                  </DialogHeader>
+                  
+                  <div className="space-y-6 py-4">
+                    {/* Current Recipients */}
+                    <div className="space-y-3">
+                      <div className="flex items-center justify-between">
+                        <h3 className="font-semibold">Current Split Configuration</h3>
+                        <Badge variant={totalPercentage === 100 ? "default" : "destructive"}>
+                          Total: {totalPercentage}%
+                        </Badge>
+                      </div>
+                      
+                      {splitRecipients.map((recipient) => (
+                        <div key={recipient.id} className="p-4 rounded-lg bg-muted/30 border border-border">
+                          {editingRecipient?.id === recipient.id ? (
+                            <div className="space-y-3">
+                              <div className="grid gap-3">
+                                <div>
+                                  <Label>Investment Name</Label>
+                                  <Input
+                                    value={editingRecipient.name}
+                                    onChange={(e) => setEditingRecipient({...editingRecipient, name: e.target.value})}
+                                    placeholder="e.g., Platform Fee, Partner Commission"
+                                  />
+                                </div>
+                                <div>
+                                  <Label>Percentage</Label>
+                                  <Input
+                                    type="number"
+                                    value={editingRecipient.percentage}
+                                    onChange={(e) => setEditingRecipient({...editingRecipient, percentage: Number(e.target.value)})}
+                                    placeholder="25"
+                                  />
+                                </div>
+                                <div>
+                                  <Label>Wallet Address</Label>
+                                  <Input
+                                    value={editingRecipient.address}
+                                    onChange={(e) => setEditingRecipient({...editingRecipient, address: e.target.value})}
+                                    placeholder="0x..."
+                                  />
+                                </div>
+                              </div>
+                              <div className="flex gap-2">
+                                <Button size="sm" onClick={handleUpdateRecipient}>Save</Button>
+                                <Button size="sm" variant="outline" onClick={() => setEditingRecipient(null)}>Cancel</Button>
+                              </div>
+                            </div>
+                          ) : (
+                            <div>
+                              <div className="flex items-center justify-between mb-2">
+                                <p className="font-semibold text-foreground">{recipient.name}</p>
+                                <div className="flex items-center gap-2">
+                                  <Badge className="bg-primary text-primary-foreground">
+                                    {recipient.percentage}%
+                                  </Badge>
+                                  <Button 
+                                    size="sm" 
+                                    variant="ghost"
+                                    onClick={() => setEditingRecipient(recipient)}
+                                  >
+                                    <Settings className="w-4 h-4" />
+                                  </Button>
+                                  <Button 
+                                    size="sm" 
+                                    variant="ghost"
+                                    onClick={() => handleRemoveRecipient(recipient.id)}
+                                  >
+                                    <Trash2 className="w-4 h-4" />
+                                  </Button>
+                                </div>
+                              </div>
+                              <code className="text-xs text-muted-foreground">{recipient.address}</code>
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Add New Recipient */}
+                    <div className="border-t pt-4">
+                      {isEditingRecipient ? (
+                        <div className="space-y-3">
+                          <h3 className="font-semibold">Add New Investment</h3>
+                          <div className="grid gap-3">
+                            <div>
+                              <Label>Investment Name</Label>
+                              <Input
+                                value={newRecipient.name}
+                                onChange={(e) => setNewRecipient({...newRecipient, name: e.target.value})}
+                                placeholder="e.g., Savings, Trading"
+                              />
+                            </div>
+                            <div>
+                              <Label>Percentage</Label>
+                              <Input
+                                type="number"
+                                value={newRecipient.percentage || ""}
+                                onChange={(e) => setNewRecipient({...newRecipient, percentage: Number(e.target.value)})}
+                                placeholder="25"
+                              />
+                            </div>
+                            <div>
+                              <Label>Wallet Address</Label>
+                              <Input
+                                value={newRecipient.address}
+                                onChange={(e) => setNewRecipient({...newRecipient, address: e.target.value})}
+                                placeholder="0x..."
+                              />
+                            </div>
+                          </div>
+                          <div className="flex gap-2">
+                            <Button onClick={handleAddRecipient}>Add Investment</Button>
+                            <Button variant="outline" onClick={() => {
+                              setIsEditingRecipient(false);
+                              setNewRecipient({ name: "", percentage: 0, address: "" });
+                            }}>Cancel</Button>
+                          </div>
+                        </div>
+                      ) : (
+                        <Button onClick={() => setIsEditingRecipient(true)} variant="outline" className="w-full">
+                          <Plus className="w-4 h-4 mr-2" />
+                          Add New Investment
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </CardContent>
           </Card>
         </div>
 
-        {/* Split Configuration & Pie Chart */}
-        {showSplitConfig && (
+        {/* Split Visualization */}
+        {splitRecipients.length > 0 && (
           <div className="grid gap-4 md:grid-cols-2">
             <Card className="shadow-elevated border-border">
               <CardHeader>
