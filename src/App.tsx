@@ -7,6 +7,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
+import QRCode from "./pages/QRCode";
 import Transactions from "./pages/Transactions";
 import Split from "./pages/Split";
 import Withdrawals from "./pages/Withdrawals";
@@ -39,6 +40,7 @@ const App = () => (
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/dashboard" element={<AppLayout><Dashboard /></AppLayout>} />
+          <Route path="/qrcode" element={<AppLayout><QRCode /></AppLayout>} />
           <Route path="/transactions" element={<AppLayout><Transactions /></AppLayout>} />
           <Route path="/split" element={<AppLayout><Split /></AppLayout>} />
           <Route path="/withdrawals" element={<AppLayout><Withdrawals /></AppLayout>} />

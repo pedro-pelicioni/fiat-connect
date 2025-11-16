@@ -77,18 +77,18 @@ const Split = () => {
   const COLORS = ['hsl(var(--primary))', 'hsl(var(--success))', 'hsl(var(--accent))'];
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-foreground">Payment Split Configuration</h1>
-          <p className="text-muted-foreground">Configure how incoming payments are distributed</p>
+          <h1 className="text-2xl md:text-3xl font-bold text-foreground">Payment Split Configuration</h1>
+          <p className="text-sm text-muted-foreground">Configure how incoming payments are distributed</p>
         </div>
-        <Badge variant={totalPercentage === 100 ? "default" : "destructive"} className="text-lg px-4 py-2">
+        <Badge variant={totalPercentage === 100 ? "default" : "destructive"} className="text-base md:text-lg px-3 md:px-4 py-1 md:py-2 w-fit">
           Total: {totalPercentage}%
         </Badge>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-4 md:gap-6 grid-cols-1 lg:grid-cols-2">
         <Card className="shadow-elevated border-border">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">

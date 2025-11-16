@@ -101,20 +101,20 @@ const Transactions = () => {
   );
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-foreground">Transaction History</h1>
-        <p className="text-muted-foreground">Complete list of all transactions</p>
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground">Transaction History</h1>
+        <p className="text-sm text-muted-foreground">Complete list of all transactions</p>
       </div>
 
       <Card className="shadow-card border-border">
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div>
-              <CardTitle>All Transactions</CardTitle>
-              <CardDescription>Filter and export your transaction history</CardDescription>
+              <CardTitle className="text-lg md:text-xl">All Transactions</CardTitle>
+              <CardDescription className="text-xs md:text-sm">Filter and export your transaction history</CardDescription>
             </div>
-            <Button variant="outline" size="sm">
+            <Button variant="outline" size="sm" className="w-fit">
               <Download className="w-4 h-4 mr-2" />
               Export
             </Button>
@@ -136,10 +136,10 @@ const Transactions = () => {
             {filteredTransactions.map((tx) => (
               <div
                 key={tx.id}
-                className="flex items-center justify-between p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors border border-border"
+                className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors border border-border gap-4"
               >
-                <div className="flex items-center gap-4">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                <div className="flex items-center gap-3 md:gap-4">
+                  <div className={`w-10 h-10 shrink-0 rounded-full flex items-center justify-center ${
                     tx.type === "incoming" 
                       ? "bg-success/10 text-success" 
                       : "bg-primary/10 text-primary"
@@ -164,12 +164,12 @@ const Transactions = () => {
                   </div>
                 </div>
                 <div className="text-right">
-                  <p className={`text-lg font-bold ${
+                  <p className={`text-base md:text-lg font-bold ${
                     tx.type === "incoming" ? "text-success" : "text-foreground"
                   }`}>
                     {tx.type === "incoming" ? "+" : "-"}${tx.amount.toFixed(2)}
                   </p>
-                  <p className="text-sm text-muted-foreground">{tx.currency}</p>
+                  <p className="text-xs md:text-sm text-muted-foreground">{tx.currency}</p>
                 </div>
               </div>
             ))}
