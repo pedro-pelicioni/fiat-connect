@@ -4,8 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Label } from "@/components/ui/label";
-import { Settings, PieChart as PieChartIcon, Plus, Trash2 } from "lucide-react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
+import { Settings, PieChart as PieChartIcon, Plus, Trash2, TrendingUp } from "lucide-react";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid } from "recharts";
 
 interface SplitRecipient {
   id: string;
@@ -32,6 +32,46 @@ const mockSplitRecipients: SplitRecipient[] = [
     name: "Merchant Revenue",
     percentage: 60,
     address: "0x9i0j...1k2l"
+  }
+];
+
+// Monthly yield distribution history (mock data)
+const monthlyYieldHistory = [
+  {
+    month: "Jul",
+    "Platform Fee": 180,
+    "Partner Commission": 300,
+    "Merchant Revenue": 720
+  },
+  {
+    month: "Aug",
+    "Platform Fee": 220,
+    "Partner Commission": 380,
+    "Merchant Revenue": 890
+  },
+  {
+    month: "Sep",
+    "Platform Fee": 195,
+    "Partner Commission": 320,
+    "Merchant Revenue": 780
+  },
+  {
+    month: "Oct",
+    "Platform Fee": 250,
+    "Partner Commission": 420,
+    "Merchant Revenue": 1000
+  },
+  {
+    month: "Nov",
+    "Platform Fee": 280,
+    "Partner Commission": 470,
+    "Merchant Revenue": 1120
+  },
+  {
+    month: "Dec",
+    "Platform Fee": 310,
+    "Partner Commission": 520,
+    "Merchant Revenue": 1250
   }
 ];
 
@@ -243,6 +283,92 @@ const Split = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Monthly Yield Evolution */}
+      <Card className="shadow-elevated border-border">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <TrendingUp className="w-5 h-5" />
+            Monthly Yield Distribution
+          </CardTitle>
+          <CardDescription>Evolution of earnings by investment category</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ResponsiveContainer width="100%" height={350}>
+            <LineChart data={monthlyYieldHistory}>
+              <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
+              <XAxis 
+                dataKey="month" 
+                className="text-xs"
+                stroke="hsl(var(--muted-foreground))"
+              />
+              <YAxis 
+                className="text-xs"
+                stroke="hsl(var(--muted-foreground))"
+                label={{ value: 'USD ($)', angle: -90, position: 'insideLeft', style: { fill: 'hsl(var(--muted-foreground))' } }}
+              />
+              <Tooltip 
+                contentStyle={{
+                  backgroundColor: 'hsl(var(--card))',
+                  border: '1px solid hsl(var(--border))',
+                  borderRadius: '8px',
+                  color: 'hsl(var(--foreground))'
+                }}
+              />
+              <Legend />
+              <Line 
+                type="monotone" 
+                dataKey="Platform Fee" 
+                stroke="hsl(var(--primary))" 
+                strokeWidth={2}
+                dot={{ fill: 'hsl(var(--primary))' }}
+              />
+              <Line 
+                type="monotone" 
+                dataKey="Partner Commission" 
+                stroke="hsl(var(--success))" 
+                strokeWidth={2}
+                dot={{ fill: 'hsl(var(--success))' }}
+              />
+              <Line 
+                type="monotone" 
+                dataKey="Merchant Revenue" 
+                stroke="hsl(var(--accent))" 
+                strokeWidth={2}
+                dot={{ fill: 'hsl(var(--accent))' }}
+              />
+            </LineChart>
+          </ResponsiveContainer>
+
+          {/* Summary Stats */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 pt-6 border-t border-border">
+            <div className="space-y-1">
+              <p className="text-xs text-muted-foreground">Platform Fee (Dec)</p>
+              <p className="text-xl font-bold text-primary">$310.00</p>
+              <p className="text-xs text-success flex items-center gap-1">
+                <TrendingUp className="w-3 h-3" />
+                +10.7% vs Nov
+              </p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-xs text-muted-foreground">Partner Commission (Dec)</p>
+              <p className="text-xl font-bold text-success">$520.00</p>
+              <p className="text-xs text-success flex items-center gap-1">
+                <TrendingUp className="w-3 h-3" />
+                +10.6% vs Nov
+              </p>
+            </div>
+            <div className="space-y-1">
+              <p className="text-xs text-muted-foreground">Merchant Revenue (Dec)</p>
+              <p className="text-xl font-bold text-accent">$1,250.00</p>
+              <p className="text-xs text-success flex items-center gap-1">
+                <TrendingUp className="w-3 h-3" />
+                +11.6% vs Nov
+              </p>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
