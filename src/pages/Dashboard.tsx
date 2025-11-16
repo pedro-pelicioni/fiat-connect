@@ -16,11 +16,13 @@ import {
   Settings,
   PieChart as PieChartIcon,
   Plus,
-  Trash2
+  Trash2,
+  QrCode
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend, Tooltip } from "recharts";
 import LoadingDots from "@/components/LoadingDots";
+import merchantQR from "@/assets/merchant-qr.png";
 
 interface Transaction {
   id: string;
@@ -253,7 +255,7 @@ const Dashboard = () => {
 
       <main className="container mx-auto px-4 py-6 space-y-6">
         {/* Balance Cards */}
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-4">
           <Card className="shadow-card border-border">
             <CardHeader className="pb-3">
               <CardDescription>Total Balance</CardDescription>
@@ -280,6 +282,21 @@ const Dashboard = () => {
               <div className="text-sm text-muted-foreground">
                 3 transactions
               </div>
+            </CardContent>
+          </Card>
+
+          <Card className="shadow-card border-border">
+            <CardHeader className="pb-3">
+              <CardDescription>Merchant QR Code</CardDescription>
+              <CardTitle className="text-lg">Payment Address</CardTitle>
+            </CardHeader>
+            <CardContent className="flex flex-col items-center gap-3">
+              <div className="bg-white p-4 rounded-lg">
+                <img src={merchantQR} alt="Merchant Payment QR Code" className="w-40 h-40" />
+              </div>
+              <p className="text-xs text-muted-foreground text-center">
+                Customers scan to pay with crypto
+              </p>
             </CardContent>
           </Card>
 
