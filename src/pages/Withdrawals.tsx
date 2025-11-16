@@ -41,26 +41,26 @@ const mockWithdrawals: WithdrawalTransaction[] = [
 
 const Withdrawals = () => {
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-4 md:space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-foreground">Withdrawals</h1>
-        <p className="text-muted-foreground">Manage and process validated transactions</p>
+        <h1 className="text-2xl md:text-3xl font-bold text-foreground">Withdrawals</h1>
+        <p className="text-sm text-muted-foreground">Manage and process validated transactions</p>
       </div>
 
       <Card className="shadow-card border-border">
         <CardHeader>
-          <CardTitle>Available for Withdrawal</CardTitle>
-          <CardDescription>Validated transactions ready to withdraw to your bank account</CardDescription>
+          <CardTitle className="text-lg md:text-xl">Available for Withdrawal</CardTitle>
+          <CardDescription className="text-xs md:text-sm">Validated transactions ready to withdraw to your bank account</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
             {mockWithdrawals.map((tx) => (
               <div
                 key={tx.id}
-                className="flex items-center justify-between p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors border border-border"
+                className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors border border-border gap-4"
               >
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center bg-success/10 text-success">
+                <div className="flex items-center gap-3 md:gap-4">
+                  <div className="w-10 h-10 shrink-0 rounded-full flex items-center justify-center bg-success/10 text-success">
                     <ArrowDownLeft className="w-5 h-5" />
                   </div>
                   <div>
@@ -74,14 +74,14 @@ const Withdrawals = () => {
                     <code className="text-xs text-muted-foreground">{tx.hash}</code>
                   </div>
                 </div>
-                <div className="text-right flex items-center gap-3">
-                  <div>
-                    <p className="text-lg font-bold text-success">
+                <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 w-full sm:w-auto">
+                  <div className="text-left sm:text-right">
+                    <p className="text-base md:text-lg font-bold text-success">
                       ${tx.amount.toFixed(2)}
                     </p>
-                    <p className="text-sm text-muted-foreground">{tx.currency}</p>
+                    <p className="text-xs md:text-sm text-muted-foreground">{tx.currency}</p>
                   </div>
-                  <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90">
+                  <Button size="sm" className="bg-primary text-primary-foreground hover:bg-primary/90 w-full sm:w-auto">
                     Withdraw
                   </Button>
                 </div>

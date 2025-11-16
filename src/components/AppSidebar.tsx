@@ -1,4 +1,4 @@
-import { Wallet, Receipt, Split, Banknote, LayoutDashboard } from "lucide-react";
+import { Wallet, Receipt, Split, Banknote, LayoutDashboard, QrCode } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 
@@ -17,6 +17,7 @@ import {
 
 const items = [
   { title: "Dashboard", url: "/dashboard", icon: LayoutDashboard },
+  { title: "QR Code", url: "/qrcode", icon: QrCode },
   { title: "Transactions", url: "/transactions", icon: Receipt },
   { title: "Payment Split", url: "/split", icon: Split },
   { title: "Withdrawals", url: "/withdrawals", icon: Banknote },
